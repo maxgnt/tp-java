@@ -22,6 +22,7 @@ L’objectif est de créer une application console qui gère une bibliothèque :
 ##  Lancement
 Depuis IntelliJ :  
 - Clic droit sur `Main.java` → **Run 'Main.main()'**
+- On peut aussi se positionner sur le fichier Main, et lancer avec le le triangle en haut de l'interface. 
 
 Ou en ligne de commande :  
 ```bash
