@@ -1,4 +1,6 @@
 package com.isitech.bibliotheque;
+import com.isitech.bibliotheque.models.Livre;
+
 
 import java.util.ArrayList;
 import java.util.List;
