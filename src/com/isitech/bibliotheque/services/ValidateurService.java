@@ -8,7 +8,7 @@ import com.isitech.bibliotheque.exceptions.*;
 import java.util.regex.Pattern;
 
 public class ValidateurService {
-    // Patterns de validation
+
     private static final Pattern PATTERN_EMAIL = Pattern.compile(
             "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
     );
@@ -19,17 +19,15 @@ public class ValidateurService {
             "^[0-9]{9}[0-9X]$"
     );
 
-    // === VALIDATEURS DE LIVRES ===
-    public void validerLivre(Livre livre) throws BibliothequeException {
-        validerISBN(livre.getIsbn());
-        validerTitre(livre.getTitre());
-        validerAuteur(livre.getAuteur());
-        if (livre.getNbPages() < 0) {
-            throw new DonneesInvalidesException("Le nombre de pages ne peut pas être négatif");
-        }
+
+    public boolean validerLivre(Livre livre) throws BibliothequeException {
+        return validerISBN(livre.getIsbn())
+                && validerTitre(livre.getTitre())
+                && validerAuteur(livre.getAuteur())
+                && livre.getNbPages() >= 0;
     }
 
-    public void validerISBN(String isbn) throws DonneesInvalidesException {
+    public boolean validerISBN(String isbn) throws DonneesInvalidesException {
         if (isbn == null || isbn.trim().isEmpty()) {
             throw new DonneesInvalidesException("ISBN requis");
         }
@@ -38,33 +36,35 @@ public class ValidateurService {
                 !PATTERN_ISBN_10.matcher(isbnNettoye).matches()) {
             throw new DonneesInvalidesException("Format ISBN invalide: " + isbn);
         }
+        return true;
     }
 
-    public void validerTitre(String titre) throws DonneesInvalidesException {
+    public boolean validerTitre(String titre) throws DonneesInvalidesException {
         if (titre == null || titre.trim().isEmpty()) {
             throw new DonneesInvalidesException("Titre requis");
         }
         if (titre.length() > 200) {
             throw new DonneesInvalidesException("Titre trop long (max 200 caractères)");
         }
+        return true;
     }
 
-    public void validerAuteur(String auteur) throws DonneesInvalidesException {
+    public boolean validerAuteur(String auteur) throws DonneesInvalidesException {
         if (auteur == null || auteur.trim().isEmpty()) {
             throw new DonneesInvalidesException("Auteur requis");
         }
         if (auteur.length() > 100) {
             throw new DonneesInvalidesException("Nom d'auteur trop long (max 100 caractères)");
         }
+        return true;
     }
 
-    // === VALIDATEURS D'UTILISATEURS ===
-    public void validerUtilisateur(Utilisateur utilisateur) throws UtilisateurInvalideException {
-        validerNom(utilisateur.getNom());
-        validerEmail(utilisateur.getEmail());
+
+    public boolean validerUtilisateur(Utilisateur utilisateur) throws UtilisateurInvalideException {
+        return validerNom(utilisateur.getNom()) && validerEmail(utilisateur.getEmail());
     }
 
-    public void validerNom(String nom) throws UtilisateurInvalideException {
+    public boolean validerNom(String nom) throws UtilisateurInvalideException {
         if (nom == null || nom.trim().isEmpty()) {
             throw new UtilisateurInvalideException("Nom requis");
         }
@@ -74,18 +74,20 @@ public class ValidateurService {
         if (nom.length() > 50) {
             throw new UtilisateurInvalideException("Nom trop long (max 50 caractères)");
         }
+        return true;
     }
 
-    public void validerEmail(String email) throws UtilisateurInvalideException {
+    public boolean validerEmail(String email) throws UtilisateurInvalideException {
         if (email == null || email.trim().isEmpty()) {
             throw new UtilisateurInvalideException("Email requis");
         }
         if (!PATTERN_EMAIL.matcher(email).matches()) {
             throw new UtilisateurInvalideException("Format email invalide: " + email);
         }
+        return true;
     }
 
-    // === VALIDATEURS FONCTIONNELS ===
+
     public Validateur<Livre> validateurLivre() {
         return this::validerLivre;
     }

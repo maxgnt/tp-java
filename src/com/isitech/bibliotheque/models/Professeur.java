@@ -26,7 +26,7 @@ public class Professeur extends Utilisateur {
         return "Professeur";
     }
 
-    // Getters (optionnels, utiles pour tests)
+
     public String getDepartement() {
         return departement;
     }
